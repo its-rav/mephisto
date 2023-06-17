@@ -38,7 +38,7 @@ from mephisto.utils.logger_core import get_logger, format_loud
 logger = get_logger(name=__name__)
 
 SYSTEM_CHANNEL_ID = "mephisto"
-START_DEATH_TIME = 10
+START_DEATH_TIME = 30
 
 # Initialize monitoring metrics
 PACKET_PROCESSING_LATENCY = Histogram(
@@ -206,7 +206,9 @@ class ClientIOHandler:
                 )
             try:
                 self._send_alive(channel_id)
-            except Exception:
+            except Exception as err:
+                # print the exception, but don't do anything with it
+                print(f"Exception while sending alive on channel {channel_id}: {repr(err)}")
                 pass
             time.sleep(0.3)
         return channel_id

@@ -161,6 +161,12 @@ class WebsocketChannel(Channel):
                         f"Unhandled OSError exception in socket {e}, attempting restart"
                     )
                     await asyncio.sleep(0.2)
+                except websockets.exceptions.InvalidStatusCode as e:
+                    
+                    logger.exception(f"Unhandled InvalidStatusCode exception in socket {e}, {repr(e)}")
+                    if self._is_closed:
+                        return  # Don't do anything if we're already closed
+                    raise e
                 except Exception as e:
                     logger.exception(f"Unhandled exception in socket {e}, {repr(e)}")
                     if self._is_closed:
